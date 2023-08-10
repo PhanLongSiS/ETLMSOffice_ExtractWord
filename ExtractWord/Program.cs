@@ -20,7 +20,7 @@ namespace ExtractWord
         /// </summary>
         /// <param name="args"> Tham số truyền vào command line,Ví dụ:-f vanban.docx -j abc.json</param>
         /// <returns></returns>
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             // dường dẫn file word cần đọc
             string path = null;
@@ -43,7 +43,7 @@ namespace ExtractWord
             {
                 Console.WriteLine("Nhập sai định dạng");
                 Console.ReadLine();
-                return;
+                return 1;
             }
             //----------------------------------- ORM To WORKBOOK  ----------------------------
             string JsonText = File.ReadAllText(filejson);
@@ -54,15 +54,13 @@ namespace ExtractWord
                 if (DataOutJson==null)
                 {
                     CreateFormExample(filejson);
-                    Console.ReadKey();
-                    return;
+                    return 1;
                 }
             }
             catch (Exception ex)
             {
                 CreateFormExample(filejson);
-                Console.ReadKey();
-                return;
+                return 1;
             }
             Application MyApp = new Application();
             Document MyDoc = null;
@@ -79,13 +77,13 @@ namespace ExtractWord
                 if (MyDoc == null)
                 {
                     DataOutJson.erroMess = "Không mở được Workbook do phiên bản Word không phù hợp.";
-                    return;
+                    return 1;
                 }
             }
             catch (Exception e)
             {
                 DataOutJson.erroMess = e.Message;
-                return;
+                return 1;
             }
 
             // Yêu cầu ứng dụng excel không hiển thị ra màn hình, --> chạy ngầm. //
@@ -103,7 +101,7 @@ namespace ExtractWord
             if (DataOutJson.documents.contentcontrols.Count==0 && DataOutJson.documents.tables.Count==0)
             {
                 DataOutJson.erroMess="Không tồn tại bất kì ContentControl nào trong file docx";
-                return;
+                return 1;
             }
             foreach (var item in DataOutJson.documents.contentcontrols)
             {
@@ -113,7 +111,11 @@ namespace ExtractWord
                     item.value = valuetext.value;
                     item.erroMess=null;
                 }
-                else item.erroMess=$"Không tồn tại ContentControl có title là {item.title} trong Word";
+                else
+                {
+                    item.erroMess=$"Không tồn tại ContentControl có title là {item.title} trong Word";
+                    item.value=null;
+                }
             }
             foreach (var item in DataOutJson.documents.tables)
             {
@@ -123,7 +125,11 @@ namespace ExtractWord
                     item.rowvalues = rowvalues.rowvalues;
                     item.erroMess=null;
                 }
-                else item.erroMess=$"Không tồn tại ContentControl Table có title {item.name} này trong Word";
+                else
+                {
+                    item.erroMess=$"Không tồn tại ContentControl Table có title {item.name} này trong Word";
+                    item.rowvalues=null;
+                }
             }
 
             //----------------------------------- PRINT / SAVE  ----------------------------
@@ -204,7 +210,7 @@ namespace ExtractWord
             System.Diagnostics.Process prc = new System.Diagnostics.Process();
             prc.StartInfo.FileName = Directory.GetCurrentDirectory()+"\\"+filejson;
             prc.Start();
-            Console.ReadKey();
+            return 0;
         }
 
         static void ReadFileWord(Document document)
