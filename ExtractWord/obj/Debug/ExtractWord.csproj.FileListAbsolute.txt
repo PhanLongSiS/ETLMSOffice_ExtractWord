@@ -10,3 +10,4 @@ D:\DoAn\SMP_MSOfficeJson\ExtractWord\obj\Debug\ExtractWord.csproj.CoreCompileInp
 D:\DoAn\SMP_MSOfficeJson\ExtractWord\obj\Debug\ExtractWord.csproj.CopyComplete
 D:\DoAn\SMP_MSOfficeJson\ExtractWord\obj\Debug\ExtractWord.exe
 D:\DoAn\SMP_MSOfficeJson\ExtractWord\obj\Debug\ExtractWord.pdb
+D:\DoAn\SMP_MSOfficeJson\ExtractWord\obj\Debug\ExtractWord.csproj.AssemblyReference.cache
